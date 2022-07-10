@@ -35,7 +35,7 @@ pub struct DatabaseSettings {
     password: String,
     port: u16,
     host: String,
-    database_name: String,
+    db_name: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -48,7 +48,7 @@ impl DatabaseSettings {
     pub fn get_connection_string(&self) -> String {
         format!(
             "postgres://{}:{}@{}:{}/{}",
-            self.username, self.password, self.host, self.port, self.database_name
+            self.username, self.password, self.host, self.port, self.db_name
         )
     }
 
