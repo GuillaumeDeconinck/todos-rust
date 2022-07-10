@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "9002:9002"
+    environment:
+      WAIT_HOSTS: postgres:5432
+      DATABASE__HOST: postgres
+      DATABASE__PORT: 5432
+      DATABASE__USERNAME: root
+      DATABASE__PASSWORD: root
+      DATABASE__DB_NAME: todos
+    command: 'sh -c "/wait && /cargo-watch -- cargo run"'
+    volumes:
+      - ./src:/app/src
+    links:
+      - postgres
