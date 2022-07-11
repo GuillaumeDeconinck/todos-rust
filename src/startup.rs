@@ -1,8 +1,10 @@
 use actix_web::dev::Server;
-use actix_web::{web, App, HttpResponse, HttpServer};
+use actix_web::{web, App, HttpServer};
 use sqlx::PgPool;
 use std::net::TcpListener;
 use tracing_actix_web::TracingLogger;
+
+use crate::routes;
 
 pub fn run(listener: TcpListener, db_pool: PgPool) -> Result<Server, std::io::Error> {
     let db_pool = web::Data::new(db_pool);
@@ -10,7 +12,7 @@ pub fn run(listener: TcpListener, db_pool: PgPool) -> Result<Server, std::io::Er
         App::new()
             .wrap(TracingLogger::default())
             .app_data(db_pool.clone())
-            .route("/ping", web::get().to(HttpResponse::Ok))
+            .route("/ping", web::get().to(routes::ping_route))
     })
     .listen(listener)?
     .run();
