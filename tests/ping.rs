@@ -3,7 +3,7 @@ use std::net::TcpListener;
 use once_cell::sync::Lazy;
 use sqlx::PgPool;
 use todos_api::{
-    configuration::{DatabaseSettings, SETTINGS},
+    configuration::{get_configuration, DatabaseSettings},
     startup, telemetry,
 };
 
@@ -20,7 +20,9 @@ pub struct TestApp {
 async fn spawn_app() -> TestApp {
     Lazy::force(&TRACING);
 
-    let pool = configure_database(&SETTINGS.database).await;
+    let configuration = get_configuration();
+
+    let pool = configure_database(&configuration.database).await;
 
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
     let port = listener.local_addr().unwrap().port();
